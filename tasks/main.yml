@@ -1,0 +1,41 @@
+# Standards: 1.2
+---
+- name: Install required packages
+  loop:
+    - flatpak
+    - gnome-software-plugin-flatpak
+    - xdg-desktop-portal
+    - xdg-desktop-portal-gnome
+    - xdg-desktop-portal-gtk
+  package:
+    name: "{{ item }}"
+    state: present
+  tags:
+    - flatpak
+
+- name: Install defined remotes
+  loop: "{{ flatpak_remotes_general + flatpak_remotes_extra }}"
+  loop_control:
+    label: "{{ item.name }}"
+  flatpak_remote:
+    name: "{{ item.name }}"
+    flatpakrepo_url: "{{ item.url }}"
+    method: "{{ item.method | default(omit) }}"
+    enabled: "{{ item.enabled | default(omit) }}"
+    state: "{{ item.state | default('present') }}"
+  tags:
+    - flatpak
+
+- name: Install defined packages
+  loop: "{{ flatpak_installs_general + flatpak_installs_extra }}"
+  loop_control:
+    label: "{{ item.name | default(item) }}"
+  flatpak:
+    name: "{{ item.name | default(item) }}"
+    method: "{{ item.method | default(omit) }}"
+    remote: "{{ item.remote | default(omit) }}"
+    state: "{{ item.state | default('present') }}"
+  tags:
+    - flatpak
+
+...
