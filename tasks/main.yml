@@ -5,7 +5,6 @@
     - flatpak
     - gnome-software-plugin-flatpak
     - xdg-desktop-portal
-    - xdg-desktop-portal-gnome
     - xdg-desktop-portal-gtk
   package:
     name: "{{ item }}"
